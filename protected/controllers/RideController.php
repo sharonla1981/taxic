@@ -74,7 +74,13 @@ class RideController extends Controller
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
-
+                
+                if (isset($_SESSION['currentRideId']))
+                {
+                    $id = $_SESSION['currentRideId'];
+                    $model=$this->loadModel($id);
+                }
+                
 		$this->render('create',array(
 			'model'=>$model,'sources'=>$sources,
 		));
@@ -92,7 +98,9 @@ class RideController extends Controller
                 
                 if($model->save())
                 {
-                    echo true;
+                    Yii::app()->session['currentRideId'] = $model->id;
+                    //echo true;
+                    echo Yii::app()->session['currentRideId'];
                 }
                 
             }
