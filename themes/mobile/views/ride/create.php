@@ -5,6 +5,7 @@
 
 <input type="hidden" id="datetime" name="datetime"/>      
 <div id="rideForm" style="text-align: center">
+    <div id="formError" class="form errorSummary"></div>
         <fieldset data-role="controlgroup" data-type="horizontal" id="source">
             <div id="stepOne">
                <legend> מקור נסיעה</legend>
@@ -28,7 +29,9 @@
             
         <div id="stepTwo">
         <label for="textAmount">סכום</label>
-        <input type="text" id="textAmount" name="textAmount"/>
+        <!--<input type="text" id="textAmount" name="textAmount"/> -->
+        <?php echo CHtml::activeTextField($model, 'amount', array("id"=>"textAmount", "name"=>"textAmount")); ?>
+        <?php echo CHtml::error($model, 'amount'); ?>
         </div>
         </fieldset>
         <div id="rideStartingTime">
@@ -45,46 +48,101 @@
             </div>
         <a href="#rideStartPopup" id="openSourcePopup" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" style="display: none"></a>
         <div data-role="popup" id="rideStartPopup" data-overlay-theme="e" data-theme="a">
-            <a href="#" id="rideStart" data-role="button" data-inline="true">התחל נסיעה</a>
+            <!--<div id="rideStart" data-role="button" data-inline="true">התחל נסיעה</div> -->
+            <input type="button" id="rideStart"  value="התחל נסיעה"/>
         </div>
-        <a href="#" data-role="button" data-inline="true">נסיעה חדשה</a>
-        <a href="#" data-role="button" data-inline="true">אישור</a>
+        <div  id="newRide" data-role="button" data-inline="true">התחל נסיעה חדשה</div>
+        <div id="updateAmount" data-role="button" data-inline="true">עדכן סכום</div>
         
 </div>
 
 
-
 <script type="text/javascript">
-$(document).ready(function() {
-    
+$(document).bind('pageinit', function(){ 
+//$(document).delegate('#page', 'pageinit', function () {
+//$(document).ready(function() {    
     //set the source_id of the selected source (radio button)
     var source_id;
-    $("input[name=source_id]").change(function(){
-        $("#openSourcePopup").click();
+    $("input[name=source_id]").click(function(event, ui){
+        $("#rideStartPopup").popup("open");
         source_id = $(this).val();
     });
     
-    $("#rideStartPopup").click(function(){
-        
+    $("#rideStart").click(function(event, ui){ 
+        $.mobile.showPageLoadingMsg();
+        $("#rideStartPopup").popup("close");
+           
         //update ride table on the ride start with no amount.
        $.ajax({
+           
            type: "POST",
+           //url: "http://192.168.1.10/taxic/index.php/ride/rideStart",
            url: "rideStart",
            data: {
                "source_id": source_id,
                "currentTime": $("#datetime").val()
            },
            success: function(data){
-             alert(data);  
+             
+             $("#rideStartingTime").empty();
+             //$("#rideStartingTime").delay(8000).fadeIn();
+             $("#rideStartingTime").append(data);
+             
+             $.mobile.hidePageLoadingMsg();
            },
            error: function(e){
-               alert(e);
+                alert(e.responseText);
            }
            
        });
-       $(this).popup("close");
+       
+       
+       
     });
     
+    //$("#updateAmount").click(function(){
+    $("#updateAmount").bind("click", function(event, ui) {
+        //alert($("#textAmount").val());
+        $.ajax({
+           type: "POST",
+           url: "updateAmount",
+           data: {
+               amount: $("#textAmount").val()
+           },
+           success: function(data){
+               //document.location = document.URL;
+               //refreshPage();
+           },
+           error: function(e){
+               alert(e.responseText);
+           }
+           
+       });
+    });
+    
+    //$("#newRide").click(function(){
+       
+    $("#newRide").bind("click", function(event, ui) {
+        $.mobile.showPageLoadingMsg();
+        $.ajax({
+           type: "POST",
+           url: "newRide",
+           data: {
+               amount: $("#textAmount").val()
+           },
+           success: function(data){
+     
+             $("#rideStartingTime").empty();        
+             $.mobile.hidePageLoadingMsg();
+             
+           },
+           error: function(e){
+               alert("error");
+           }
+           
+       });
+    });
+
 });
 
 

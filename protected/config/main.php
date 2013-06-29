@@ -69,7 +69,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=taxicdb',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '!q2w3e4r5',
+			'password' => 'laviesh12',
 			'charset' => 'utf8',
 		),
 		
@@ -101,4 +101,5 @@ return array(
 		'adminEmail'=>'webmaster@example.com',
 	),
         'onBeginRequest'=>array('onBegin', 'BeginRequest'),
+        
 );

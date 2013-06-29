@@ -48,7 +48,7 @@ class Ride extends CActiveRecord
 		return array(
 			array('start_time, source_id', 'required'),
 			array('source_id, user_id, create_user_id, update_user_id', 'numerical', 'integerOnly'=>true),
-			array('amount', 'numerical'),
+			array('amount', 'numerical','message'=>'הסכום חייב להיות מספרי'),
 			array('create_time, update_time', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

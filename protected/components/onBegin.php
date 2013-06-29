@@ -13,7 +13,7 @@ class onBegin
         Yii::app()->language=Yii::app()->request->getPreferredLanguage();
         
       
-        if (!Yii::app()->detectMobileBrowser->showMobile)
+        if (Yii::app()->detectMobileBrowser->showMobile)
             {
                 Yii::app()->theme = "mobile";
             }

@@ -32,7 +32,7 @@ class RideController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','rideStart'),
+				'actions'=>array('create','update','rideStart','updateAmount','newRide','cordova_plugins.json'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -68,12 +68,12 @@ class RideController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Ride']))
+		/*if(isset($_POST['Ride']))
 		{
 			$model->attributes=$_POST['Ride'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
-		}
+		}*/
                 
                 if (isset($_SESSION['currentRideId']))
                 {
@@ -85,6 +85,7 @@ class RideController extends Controller
 			'model'=>$model,'sources'=>$sources,
 		));
 	}
+        
         
         public function actionRideStart()
         {
@@ -100,17 +101,32 @@ class RideController extends Controller
                 {
                     Yii::app()->session['currentRideId'] = $model->id;
                     //echo true;
-                    echo Yii::app()->session['currentRideId'];
+                    
+                    //Yii::app()->request->redirect('http://localhost/taxic/index.php/ride/create');
+                    //$this->redirect(array('ride/create'));
+                    
+                    //echo Yii::app()->session['currentRideId'];
+                    $date = new DateTime($model->start_time);
+                    echo "<b><p> הנסיעה החלה ב: ". date_format($date, 'H:i d/m/Y')."</p></b>";
                 }
                 
             }
+        }
+        
+        public function actionNewRide()
+        {
+            if (Yii::app()->request->isAjaxRequest)
+            {
+                unset(Yii::app()->session['currentRideId']);
+            }
+            
         }
         
         public function actionUpdateAmount()
         {
             if (Yii::app()->request->isAjaxRequest)
             {
-                $id = $_POST['id'];
+                $id = Yii::app()->session['currentRideId'];
                 
                 $model=$this->loadModel($id);
                 
@@ -118,13 +134,14 @@ class RideController extends Controller
                 
                 if($model->save())
                 {
-                    echo true;
+                    unset(Yii::app()->session['currentRideId']);
+                    //echo true;
                 }
-                
-                else if($model->hasErrors())
+                /*
+                elseif($model->hasErrors())
                 {
                     echo CHtml::errorSummary($model);
-                }
+                }*/
                 
             }
         }
