@@ -32,7 +32,7 @@ class RideController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','rideStart','updateAmount','newRide','cordova_plugins.json'),
+				'actions'=>array('create','update','rideStart','updateAmount','newRide','updateDestination'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -91,23 +91,29 @@ class RideController extends Controller
         {
             if (Yii::app()->request->isAjaxRequest)
             {
+                $lat = isset($_POST['lat']) ? $_POST['lat'] : 0.0;
+                $lon = isset($_POST['lon']) ? $_POST['lon'] : 0.0;
                 $model=new Ride;
                 
                 $model->source_id = $_POST['source_id'];
                 $model->start_time = $_POST['currentTime'];
                 $model->user_id = Yii::app()->user->id;
+                $model->origin_lat = isset($_POST['lat']) ? $_POST['lat'] : 0.0;
+                $model->origin_lon = isset($_POST['lon']) ? $_POST['lon'] : 0.0;
+                
+                //$model->origin_address = $model->getGoogleAddressByLatLon($model->origin_lat, $model->origin_lon);
+                
+                //isset($_POST['address']) ? $_POST['address'] : "";
                 
                 if($model->save())
                 {
                     Yii::app()->session['currentRideId'] = $model->id;
-                    //echo true;
-                    
-                    //Yii::app()->request->redirect('http://localhost/taxic/index.php/ride/create');
-                    //$this->redirect(array('ride/create'));
-                    
-                    //echo Yii::app()->session['currentRideId'];
+                  
                     $date = new DateTime($model->start_time);
                     echo "<b><p> הנסיעה החלה ב: ". date_format($date, 'H:i d/m/Y')."</p></b>";
+                }
+                else{
+                    echo "error";
                 }
                 
             }
@@ -142,6 +148,30 @@ class RideController extends Controller
                 {
                     echo CHtml::errorSummary($model);
                 }*/
+                
+            }
+        }
+        
+        public function actionUpdateDestination()
+        {
+            if (Yii::app()->request->isAjaxRequest)
+            {
+                $id = Yii::app()->session['currentRideId'];
+                
+                $model=$this->loadModel($id);
+                
+                $model->destination_address = $_POST['destinationAddress'];
+                
+                if($model->save())
+                {
+                    //unset(Yii::app()->session['currentRideId']);
+                    echo true;
+                }
+                
+                else
+                {
+                    echo false;
+                }
                 
             }
         }

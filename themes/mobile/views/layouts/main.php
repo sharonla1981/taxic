@@ -10,20 +10,16 @@
         <?php //Yii::app()->clientScript->registerScriptFile("http://code.jquery.com/jquery-1.9.1.min.js"); ?>
         <?php Yii::app()->clientScript->registerCoreScript("jquery"); ?>
         <?php Yii::app()->clientScript->registerScriptFile("http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"); ?>
-        <?php //Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl."/js/main.js"); ?>
+        <?php //Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl."/js/webintent.js"); ?>
         
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
              
-        <script type="text/javascript" charset="utf-8" src="/taxic/js/cordova.js"></script>
-        <script type="text/javascript" charset="utf-8">
+      <script type="text/javascript" charset="utf-8" src="/taxic/js/cordova.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/taxic/js/webintent.js"></script>
+      <script type="text/javascript" charset="utf-8">
             
-        $("#page1").live("pageshow", function() {
-            
-            
-                        
-        });
-        
-         
+        var lat = 0.0;
+        var lon = 0.0;
         // Call onDeviceReady when PhoneGap is loaded.
         //
         // At this point, the document has loaded but cordova.js has not.
@@ -36,16 +32,34 @@
         // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
         //
         function onDeviceReady() {
+            //alert("test");
             navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
             
-            showAlert();
+            //showAlert();
         };
         
         function onGeoSuccess(position) {
             
                 lat = position.coords.latitude;
                 lon = position.coords.longitude;
-                          
+                
+                
+                /* get address from google using current longitude&latitude
+                $.ajax({
+                   type: "GET",
+                   url: "http://maps.googleapis.com/maps/api/geocode/json",
+                   dataType: 'json',
+                   cache: false,
+                   data: 'latlng=' + lat + "," + lon + '&sensor=false&language=he',
+                   success: function(json_data){                          
+                           alert(json_data["results"][0]["address_components"][1]["long_name"]);
+                       },
+                   error: function(e){
+                       alert(e);
+                   }
+                   });*/ 
+                           //alert(lat);
+
         };
             
         function onGeoError(error) {
@@ -54,7 +68,7 @@
                 }
         };
         
-        function showAlert() {
+        /*function showAlert() {
             navigator.notification.alert(
                 'You are the winner!',  // message
                 alertDismissed,         // callback
@@ -65,11 +79,16 @@
         
         function alertDismissed() {
             // do something
-        }
+        }*/
             
 
         </script>
-
+        <style>
+            /* change menu font size*/
+            .ui-btn-text {
+                font-size: 16px;
+            }
+        </style>
 </head>
 
 <body>
@@ -81,7 +100,7 @@
 	<div id="header">
 		
                 <div data-role="header" style="overflow:hidden;" data-theme="e">
-    <h1>מונית בקליק</h1>
+    <h1>טקסי-לייזר</h1>
     <div data-role="navbar" style="text-align: right">
         <ul>
             <li><a href="#">דוחות</a></li>
