@@ -16,6 +16,7 @@ class RideController extends Controller
 		return array(
 			'accessControl', // perform access control for CRUD operations
 			'postOnly + delete', // we only allow deletion via POST request
+                        array('auth.filters.AuthFilter'),
 		);
 	}
 
@@ -265,4 +266,5 @@ class RideController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
 }

@@ -20,8 +20,14 @@ class SiteController extends Controller
 			),
 		);
 	}
+        
+        public function filters() {
+            return array( //important to add site/error, so an un permitted user will get the error.
+                array('auth.filters.AuthFilter - site/index site/login site/logout site/error'),
+            );
+        }
 
-	/**
+        /**
 	 * This is the default 'index' action that is invoked
 	 * when an action is not explicitly requested by users.
 	 */
@@ -106,4 +112,5 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+        
 }

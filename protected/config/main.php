@@ -1,5 +1,7 @@
 <?php
 
+
+Yii::setPathOfAlias('bootstrap', dirname(__FILE__).'/../extensions/bootstrap');
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
@@ -16,6 +18,8 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+                'application.modules.auth.*',
+                'application.modules.auth.components.*',
 	),
 
 	'modules'=>array(
@@ -27,10 +31,14 @@ return array(
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 		),
-            
-                'rbam'=>array(
-                    'initialise'=>true,
+                'auth'=>array(
+                  'userNameColumn' => 'email',  
                 ),
+                /*
+                'rbam'=>array(
+                    //'initialise'=>false,
+                    'userNameAttribute'=>'email',
+                ),*/
 		
 	),
 
@@ -39,14 +47,30 @@ return array(
                 'detectMobileBrowser' => array(
                     'class' => 'application.extensions.XDetectMobileBrowser',
                 ),
+            
+                'errorHandler'=>array(
+			// use 'site/error' action to display errors
+			'errorAction'=>'site/error',
+		),
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+                        'class'=>'auth.components.AuthWebUser',
 		),
             
                 'authManager'=>array(
                   'class'=>'CDbAuthManager',
-                  'connectionID'=>'db'
+                  'connectionID'=>'db',
+                    'behaviors' => array(
+                        'auth' => array(
+                            'class' => 'auth.components.AuthBehavior',
+                            'admins' => array('admin@taxic.com'),// users with full access
+                        ),
+                    ),
+                ),
+            
+                'bootstrap'=>array(
+                         'class'=>'bootstrap.components.Bootstrap',
                 ),
 		// uncomment the following to enable URLs in path-format
 		
@@ -60,23 +84,20 @@ return array(
 		),
                 
 		
-		'db'=>array(
+		/*'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
+		),*/
 		// uncomment the following to use a MySQL database
 		
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=taxicdb',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => 'laviesh12',
+			'password' => '',
 			'charset' => 'utf8',
 		),
 		
-		'errorHandler'=>array(
-			// use 'site/error' action to display errors
-			'errorAction'=>'site/error',
-		),
+		
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -100,6 +121,7 @@ return array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
 	),
+        //'theme'=>'bootstrap',
         'onBeginRequest'=>array('onBegin', 'BeginRequest'),
         
 );

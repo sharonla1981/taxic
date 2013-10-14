@@ -2,6 +2,7 @@
 /* @var $this RideController */
 /* @var $model Ride */
 /* @var $form CActiveForm */
+
 ?>
 
 <div class="form">

@@ -5,8 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<!--<meta name="language" content="he" /> -->
-        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
-        <?php Yii::app()->clientScript->registerCssFile("http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"); ?>
+        
         <?php //Yii::app()->clientScript->registerScriptFile("http://code.jquery.com/jquery-1.9.1.min.js"); ?>
         <?php Yii::app()->clientScript->registerCoreScript("jquery"); ?>
         <?php Yii::app()->clientScript->registerScriptFile("http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"); ?>
@@ -14,10 +13,13 @@
         
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
              
-      <script type="text/javascript" charset="utf-8" src="/taxic/js/cordova.js"></script>
-      <script type="text/javascript" charset="utf-8" src="/taxic/js/webintent.js"></script>
-      <script type="text/javascript" charset="utf-8">
-            
+        <!-- <script type="text/javascript" charset="utf-8" src="/taxic/js/cordova.js"></script> -->
+        <script type="text/javascript" charset="utf-8" src="/taxic/js/webintent.js"></script>
+      
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
+        <?php Yii::app()->clientScript->registerCssFile("http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"); ?>
+        <script type="text/javascript" charset="utf-8">
+              
         var lat = 0.0;
         var lon = 0.0;
         // Call onDeviceReady when PhoneGap is loaded.
@@ -105,7 +107,7 @@
         <ul>
             <li><a href="#">דוחות</a></li>
             <!--<li><a href="../ride/create">נסיעות</a></li> -->
-            <li><?php echo CHtml::link('נסיעות',$this->createAbsoluteUrl('ride/create')); ?></li>
+            <li><?php echo CHtml::link('נסיעות',$this->createUrl('ride/create')); ?></li>
             
             
             
